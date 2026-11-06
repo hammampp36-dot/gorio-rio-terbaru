@@ -3,28 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencatatan Keuangan Gorio Grio Es</title>
+    <title>Pencatatan Keuangan Gorio Grio Es - CR7 Video BG</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Mengatur Video agar Diam di Background, Full Layar, dan Loop */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -2;
+        }
+        /* Efek Gelap Transparan di atas Video agar Tulisan Tetap Jelas Dibaca */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 7, 12, 0.78);
+            z-index: -1;
+        }
+        /* Kartu Tampilan Semi-Transparan (Glassmorphism) */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.80);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-6">
-    <div class="max-w-5xl mx-auto space-y-6">
+<body class="p-4 md:p-6 text-gray-100">
+
+    <!-- Background Video Ronaldo (Pastikan file video dinamai ronaldo.mp4 atau sesuaikan dengan nama file Anda) -->
+    <video autoplay muted loop playsinline class="video-background">
+        <source src="ronaldo.mp4" type="video/mp4">
+        Browser Anda tidak mendukung pemutaran video background.
+    </video>
+    
+    <!-- Lapisan Gelap Transparan -->
+    <div class="video-overlay"></div>
+
+    <div class="max-w-5xl mx-auto space-y-6 relative z-10">
         
         <!-- Header -->
-        <div class="bg-blue-600 text-white p-6 rounded-lg shadow-md">
-            <h1 class="text-2xl font-bold">Pencatatan Keuangan Gorio Grio Es</h1>
-            <p class="text-sm opacity-90">Kelola Pemasukan, Pengeluaran, Cash, GoPay, dan Akumulasi Utang Pelanggan</p>
+        <div class="glass-card text-white p-6 rounded-xl shadow-2xl border-l-4 border-indigo-500 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">⚡ GORIO GRIO ES - FINANCE</h1>
+                <p class="text-xs text-gray-400 mt-1">Sistem Keuangan & Buku Utang Pelanggan (CR7 Video Edition)</p>
+            </div>
+            <button onclick="resetAllData()" class="bg-red-600/80 hover:bg-red-600 text-white text-xs px-3 py-2 rounded-lg font-semibold transition shadow-lg">Reset Semua Data</button>
+        </div>
+
+        <!-- Kartu Ringkasan Keuangan -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-emerald-500">
+                <p class="text-xs text-gray-400 font-medium">Total Kas (Cash)</p>
+                <h3 id="summaryCash" class="text-lg font-bold text-emerald-400 mt-1">Rp 0</h3>
+            </div>
+            <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-sky-500">
+                <p class="text-xs text-gray-400 font-medium">Total GoPay</p>
+                <h3 id="summaryGopay" class="text-lg font-bold text-sky-400 mt-1">Rp 0</h3>
+            </div>
+            <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-rose-500">
+                <p class="text-xs text-gray-400 font-medium">Total Pengeluaran</p>
+                <h3 id="summaryExpense" class="text-lg font-bold text-rose-400 mt-1">Rp 0</h3>
+            </div>
+            <div class="glass-card p-4 rounded-xl shadow-lg border-l-4 border-amber-500">
+                <p class="text-xs text-gray-400 font-medium">Total Piutang (Utang)</p>
+                <h3 id="summaryDebt" class="text-lg font-bold text-amber-400 mt-1">Rp 0</h3>
+            </div>
         </div>
 
         <!-- Form Input Transaksi -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Tambah Transaksi Baru</h2>
+        <div class="glass-card p-6 rounded-xl shadow-2xl">
+            <h2 class="text-xl font-semibold mb-4 text-gray-200">Tambah Transaksi Baru</h2>
             
             <form id="financeForm" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Jenis Transaksi -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Transaksi</label>
-                        <select id="type" onchange="toggleFormOptions()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Jenis Transaksi</label>
+                        <select id="type" onchange="toggleFormOptions()" class="w-full p-2.5 bg-gray-900 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="pemasukan">Pemasukan (+)</option>
                             <option value="pengeluaran">Pengeluaran (-)</option>
                         </select>
@@ -32,16 +93,22 @@
 
                     <!-- Jumlah Uang -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label>
-                        <input type="number" id="amount" placeholder="Contoh: 15000" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Jumlah (Rp)</label>
+                        <input type="number" id="amount" placeholder="Contoh: 15000" class="w-full p-2.5 bg-gray-900 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+                    </div>
+
+                    <!-- Tanggal Transaksi -->
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Tanggal Transaksi</label>
+                        <input type="date" id="transactionDate" class="w-full p-2.5 bg-gray-900 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
                     </div>
                 </div>
 
                 <!-- Opsi Metode Pembayaran (Muncul jika Pemasukan) -->
                 <div id="paymentMethodGroup" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Metode Pembayaran</label>
-                        <select id="paymentMethod" onchange="toggleDebtInput()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Metode Pembayaran</label>
+                        <select id="paymentMethod" onchange="toggleDebtInput()" class="w-full p-2.5 bg-gray-900 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="cash">Lunas - Cash</option>
                             <option value="gopay">Lunas - GoPay</option>
                             <option value="hutang">Ambil Dulu / Utang (Bayar Nanti)</option>
@@ -50,35 +117,35 @@
 
                     <!-- Input Nama Pengutang (Hanya Muncul Jika Pilih Utang) -->
                     <div id="debtorGroup" class="hidden">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pelanggan (Pengutang)</label>
-                        <input type="text" id="debtorName" placeholder="Contoh: Budi (Otomatis akumulasi jika nama sama)" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Nama Pelanggan (Pengutang)</label>
+                        <input type="text" id="debtorName" placeholder="Contoh: Budi" class="w-full p-2.5 bg-gray-900 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                     </div>
                 </div>
 
                 <!-- Keterangan / Catatan -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan / Detail Pesanan</label>
-                    <input type="text" id="description" placeholder="Contoh: Beli 3 Gorio Rasa Cokelat" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Keterangan / Detail Pesanan</label>
+                    <input type="text" id="description" placeholder="Contoh: Beli 3 Gorio Rasa Cokelat" class="w-full p-2.5 bg-gray-900 border border-gray-700 rounded-lg text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
 
-                <button type="button" onclick="addTransaction()" class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition">Simpan Transaksi</button>
+                <button type="button" onclick="addTransaction()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-2.5 rounded-lg font-bold shadow-lg transition">Simpan Transaksi</button>
             </form>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Tabel Daftar Utang Pelanggan (Akumulasi) -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800">Daftar Buku Utang Pelanggan</h2>
+            <div class="glass-card p-6 rounded-xl shadow-2xl">
+                <h2 class="text-xl font-semibold mb-4 text-gray-200">Daftar Buku Utang Pelanggan</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-yellow-50 text-gray-700 text-sm">
-                                <th class="p-3 border">Nama Pelanggan</th>
-                                <th class="p-3 border">Total Utang</th>
-                                <th class="p-3 border">Aksi</th>
+                            <tr class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider">
+                                <th class="p-3 border border-gray-800">Nama Pelanggan</th>
+                                <th class="p-3 border border-gray-800">Total Utang</th>
+                                <th class="p-3 border border-gray-800">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="debtList" class="text-sm">
+                        <tbody id="debtList" class="text-sm text-gray-300">
                             <tr>
                                 <td colspan="3" class="p-4 text-center text-gray-500 italic">Belum ada pelanggan yang berutang.</td>
                             </tr>
@@ -87,22 +154,22 @@
                 </div>
             </div>
 
-            <!-- Tabel Riwayat Transaksi Hari Ini -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800">Riwayat Transaksi Masuk/Keluar</h2>
+            <!-- Tabel Riwayat Transaksi -->
+            <div class="glass-card p-6 rounded-xl shadow-2xl">
+                <h2 class="text-xl font-semibold mb-4 text-gray-200">Riwayat Transaksi Masuk/Keluar</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-gray-100 text-gray-700 text-sm">
-                                <th class="p-3 border">Waktu</th>
-                                <th class="p-3 border">Info & Keterangan</th>
-                                <th class="p-3 border">Jumlah</th>
-                                <th class="p-3 border">Aksi</th>
+                            <tr class="bg-gray-900/80 text-gray-300 text-xs uppercase tracking-wider">
+                                <th class="p-3 border border-gray-800">Tanggal</th>
+                                <th class="p-3 border border-gray-800">Info & Keterangan</th>
+                                <th class="p-3 border border-gray-800">Jumlah</th>
+                                <th class="p-3 border border-gray-800">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="transactionList" class="text-sm">
+                        <tbody id="transactionList" class="text-sm text-gray-300">
                             <tr>
-                                <td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada transaksi hari ini.</td>
+                                <td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada transaksi.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -112,14 +179,20 @@
 
     </div>
 
-    <!-- Script Logika Fitur Akumulasi Utang -->
+    <!-- Script Logika -->
     <script>
-        let debtsData = {}; // Menyimpan data utang per nama pelanggan
+        let debtsData = JSON.parse(localStorage.getItem('gorio_debts')) || {};
+        let transactionsData = JSON.parse(localStorage.getItem('gorio_transactions')) || [];
+
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('transactionDate').value = today;
+            renderAll();
+        };
 
         function toggleFormOptions() {
             const type = document.getElementById('type').value;
             const paymentGroup = document.getElementById('paymentMethodGroup');
-            
             if (type === 'pengeluaran') {
                 paymentGroup.classList.add('hidden');
             } else {
@@ -130,7 +203,6 @@
         function toggleDebtInput() {
             const paymentMethod = document.getElementById('paymentMethod').value;
             const debtorGroup = document.getElementById('debtorGroup');
-            
             if (paymentMethod === 'hutang') {
                 debtorGroup.classList.remove('hidden');
             } else {
@@ -141,6 +213,7 @@
         function addTransaction() {
             const type = document.getElementById('type').value;
             const amount = parseFloat(document.getElementById('amount').value);
+            const inputDate = document.getElementById('transactionDate').value;
             const description = document.getElementById('description').value || '-';
             const paymentMethod = document.getElementById('paymentMethod').value;
             const debtorName = document.getElementById('debtorName').value.trim();
@@ -150,68 +223,112 @@
                 return;
             }
 
+            if (!inputDate) {
+                alert('Harap isi tanggal transaksi!');
+                return;
+            }
+
             if (type === 'pemasukan' && paymentMethod === 'hutang' && !debtorName) {
                 alert('Harap masukkan nama pengutang!');
                 return;
             }
 
-            const table = document.getElementById('transactionList');
-            
-            // Hapus baris teks kosong jika ada transaksi pertama
-            if (table.querySelector('.italic')) {
-                table.innerHTML = '';
-            }
-
-            const row = document.createElement('tr');
-            row.className = "border-b hover:bg-gray-50";
+            const dateParts = inputDate.split('-');
+            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
 
             let badgeHtml = '';
             let infoText = description;
 
-            const now = new Date();
-            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-
             if (type === 'pengeluaran') {
-                badgeHtml = '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-semibold">Pengeluaran</span>';
+                badgeHtml = '<span class="bg-rose-900/60 text-rose-300 px-2 py-0.5 rounded text-xs font-semibold border border-rose-700">Pengeluaran</span>';
             } else if (paymentMethod === 'cash') {
-                badgeHtml = '<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">Cash (Lunas)</span>';
+                badgeHtml = '<span class="bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded text-xs font-semibold border border-emerald-700">Cash (Lunas)</span>';
             } else if (paymentMethod === 'gopay') {
-                badgeHtml = '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-semibold">GoPay (Lunas)</span>';
+                badgeHtml = '<span class="bg-sky-900/60 text-sky-300 px-2 py-0.5 rounded text-xs font-semibold border border-sky-700">GoPay (Lunas)</span>';
             } else {
-                badgeHtml = `<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">Utang: ${debtorName}</span>`;
-                infoText = `${description} <br><span class="text-xs text-gray-500">Pelanggan: <b>${debtorName}</b></span>`;
+                badgeHtml = `<span class="bg-amber-900/60 text-amber-300 px-2 py-0.5 rounded text-xs font-semibold border border-amber-700">Utang: ${debtorName}</span>`;
+                infoText = `${description} <br><span class="text-xs text-gray-400">Pelanggan: <b class="text-white">${debtorName}</b></span>`;
                 
-                // Logika Akumulasi Utang Pelanggan
                 if (debtsData[debtorName]) {
                     debtsData[debtorName] += amount;
                 } else {
                     debtsData[debtorName] = amount;
                 }
-                updateDebtTable();
             }
 
-            row.innerHTML = `
-                <td class="p-3 border">${timeStr}</td>
-                <td class="p-3 border">
-                    <div class="font-medium capitalize ${type === 'pemasukan' ? 'text-green-600' : 'text-red-600'}">${type}</div>
-                    <div class="text-xs text-gray-700">${infoText}</div>
-                    <div class="mt-1">${badgeHtml}</div>
-                </td>
-                <td class="p-3 border font-semibold">Rp ${amount.toLocaleString('id-ID')}</td>
-                <td class="p-3 border">
-                    <button onclick="this.closest('tr').remove()" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Hapus</button>
-                </td>
-            `;
+            const newTransaction = {
+                id: Date.now(),
+                dateStr: formattedDate,
+                type: type,
+                paymentMethod: type === 'pemasukan' ? paymentMethod : 'pengeluaran',
+                infoText: infoText,
+                badgeHtml: badgeHtml,
+                amount: amount,
+                debtorName: debtorName
+            };
 
-            table.prepend(row);
+            transactionsData.unshift(newTransaction);
+            saveToStorage();
+            renderAll();
 
-            // Reset Form Input
             document.getElementById('financeForm').reset();
+            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
             toggleFormOptions();
             toggleDebtInput();
         }
 
-        // Fungsi memperbarui tabel daftar utang secara otomatis (Akumulasi)
+        function renderAll() {
+            renderTransactions();
+            updateDebtTable();
+            updateSummary();
+        }
+
+        function renderTransactions() {
+            const table = document.getElementById('transactionList');
+            table.innerHTML = '';
+
+            if (transactionsData.length === 0) {
+                table.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada transaksi.</td></tr>`;
+                return;
+            }
+
+            transactionsData.forEach((tx) => {
+                const row = document.createElement('tr');
+                row.className = "border-b border-gray-800 hover:bg-gray-800/40 transition";
+
+                row.innerHTML = `
+                    <td class="p-3 border border-gray-800 text-xs font-medium text-gray-300">${tx.dateStr}</td>
+                    <td class="p-3 border border-gray-800">
+                        <div class="font-medium capitalize ${tx.type === 'pemasukan' ? 'text-emerald-400' : 'text-rose-400'}">${tx.type}</div>
+                        <div class="text-xs text-gray-300 mt-0.5">${tx.infoText}</div>
+                        <div class="mt-1.5">${tx.badgeHtml}</div>
+                    </td>
+                    <td class="p-3 border border-gray-800 font-semibold text-gray-200">Rp ${tx.amount.toLocaleString('id-ID')}</td>
+                    <td class="p-3 border border-gray-800">
+                        <button onclick="deleteTransaction(${tx.id})" class="bg-rose-600/80 hover:bg-rose-600 text-white px-2.5 py-1 rounded text-xs transition shadow">Hapus</button>
+                    </td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function deleteTransaction(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) {
+                const tx = transactionsData.find(t => t.id === id);
+                if (tx && tx.paymentMethod === 'hutang' && tx.debtorName) {
+                    if (debtsData[tx.debtorName]) {
+                        debtsData[tx.debtorName] -= tx.amount;
+                        if (debtsData[tx.debtorName] <= 0) {
+                            delete debtsData[tx.debtorName];
+                        }
+                    }
+                }
+                transactionsData = transactionsData.filter(t => t.id !== id);
+                saveToStorage();
+                renderAll();
+            }
+        }
+
         function updateDebtTable() {
             const debtTable = document.getElementById('debtList');
             debtTable.innerHTML = '';
@@ -225,25 +342,80 @@
             names.forEach(name => {
                 const totalDebt = debtsData[name];
                 const row = document.createElement('tr');
-                row.className = "border-b hover:bg-gray-50";
+                row.className = "border-b border-gray-800 hover:bg-gray-800/40 transition";
 
                 row.innerHTML = `
-                    <td class="p-3 border font-medium text-gray-800">${name}</td>
-                    <td class="p-3 border font-semibold text-yellow-700">Rp ${totalDebt.toLocaleString('id-ID')}</td>
-                    <td class="p-3 border space-x-1">
-                        <button onclick="payDebt('${name}')" class="bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600">Lunas / Bayar</button>
+                    <td class="p-3 border border-gray-800 font-medium text-gray-200">${name}</td>
+                    <td class="p-3 border border-gray-800 font-semibold text-amber-400">Rp ${totalDebt.toLocaleString('id-ID')}</td>
+                    <td class="p-3 border border-gray-800 space-x-1">
+                        <button onclick="payDebt('${name}')" class="bg-emerald-600/80 hover:bg-emerald-600 text-white px-2.5 py-1 rounded text-xs transition shadow">Lunas / Bayar</button>
                     </td>
                 `;
                 debtTable.appendChild(row);
             });
         }
 
-        // Fungsi melunasi utang pelanggan (menghapus dari daftar utang)
         function payDebt(name) {
             if (confirm(`Apakah utang atas nama "${name}" sudah dibayar lunas?`)) {
+                const paidAmount = debtsData[name];
                 delete debtsData[name];
-                updateDebtTable();
-                alert(`Utang atas nama ${name} telah dilunasi.`);
+
+                const now = new Date();
+                const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+                
+                const paidTransaction = {
+                    id: Date.now(),
+                    dateStr: dateStr,
+                    type: 'pemasukan',
+                    paymentMethod: 'cash',
+                    infoText: `Pelunasan utang dari <b class="text-white">${name}</b>`,
+                    badgeHtml: '<span class="bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded text-xs font-semibold border border-emerald-700">Cash (Pelunasan Utang)</span>',
+                    amount: paidAmount,
+                    debtorName: ''
+                };
+
+                transactionsData.unshift(paidTransaction);
+                saveToStorage();
+                renderAll();
+                alert(`Utang atas nama ${name} telah dilunasi dan otomatis masuk ke Kas (Cash).`);
+            }
+        }
+
+        function updateSummary() {
+            let totalCash = 0;
+            let totalGopay = 0;
+            let totalExpense = 0;
+
+            transactionsData.forEach(tx => {
+                if (tx.type === 'pemasukan') {
+                    if (tx.paymentMethod === 'cash') totalCash += tx.amount;
+                    if (tx.paymentMethod === 'gopay') totalGopay += tx.amount;
+                } else if (tx.type === 'pengeluaran') {
+                    totalExpense += tx.amount;
+                }
+            });
+
+            let totalDebt = 0;
+            Object.values(debtsData).forEach(val => totalDebt += val);
+
+            document.getElementById('summaryCash').innerText = `Rp ${totalCash.toLocaleString('id-ID')}`;
+            document.getElementById('summaryGopay').innerText = `Rp ${totalGopay.toLocaleString('id-ID')}`;
+            document.getElementById('summaryExpense').innerText = `Rp ${totalExpense.toLocaleString('id-ID')}`;
+            document.getElementById('summaryDebt').innerText = `Rp ${totalDebt.toLocaleString('id-ID')}`;
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('gorio_debts', JSON.stringify(debtsData));
+            localStorage.setItem('gorio_transactions', JSON.stringify(transactionsData));
+        }
+
+        function resetAllData() {
+            if (confirm("PERINGATAN: Apakah Anda yakin ingin menghapus seluruh riwayat dan data utang? Data tidak dapat dikembalikan.")) {
+                localStorage.clear();
+                debtsData = {};
+                transactionsData = [];
+                renderAll();
+                alert("Semua data berhasil direset.");
             }
         }
     </script>
